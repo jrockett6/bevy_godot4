@@ -1,0 +1,11 @@
+[package]
+name = "bevy_godot4"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["lib", "cdylib"]
+
+[dependencies]
+bevy = {version = "0.10", default-features = false, features = ["bevy_asset"]}
+godot = { git = "https://github.com/godot-rust/gdext", branch = "master", default_features = false }

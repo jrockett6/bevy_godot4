@@ -1,0 +1,16 @@
+[package]
+name = "simple"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+path = "../run_godot.rs"
+name = "simple"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+bevy_godot4 = { path = "../../../bevy_godot4" }
+godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }
