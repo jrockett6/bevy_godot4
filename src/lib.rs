@@ -1,32 +1,13 @@
+pub mod app;
+pub mod component;
+pub mod utils;
+
+pub use bevy;
 pub use godot;
-
-use bevy::prelude::*;
-use godot::prelude::*;
-
-struct BevyExtensionLibrary;
-
-#[gdextension]
-unsafe impl ExtensionLibrary for BevyExtensionLibrary {}
-
-#[derive(GodotClass)]
-#[class(base=Node)]
-struct BevyApp {
-    app: App,
-}
-
-#[godot_api]
-impl NodeVirtual for BevyApp {
-    fn init(_base: Base<Node>) -> Self {
-        Self {
-            app: App::default(),
-        }
-    }
-
-    fn ready(&mut self) {
-        println!("ready!!!!!!!!");
-    }
-
-    fn process(&mut self, _delta: f64) {
-        self.app.update();
-    }
+pub mod prelude {
+    pub use godot::prelude::gdextension;
+    pub use super::component::GdComponent;
+    pub use super::utils::{GodotPhysicsFrame, GodotVisualFrame, SystemDeltaTimer};
+    pub use bevy_godot4_proc_macros::bevy_app;
+    pub use lazy_static;
 }

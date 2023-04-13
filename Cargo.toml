@@ -8,4 +8,8 @@ crate-type = ["lib", "cdylib"]
 
 [dependencies]
 bevy = {version = "0.10", default-features = false, features = ["bevy_asset"]}
-godot = { git = "https://github.com/godot-rust/gdext", branch = "master", default_features = false }
+godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }
+bevy_godot4_proc_macros = { path = "./proc_macros" }
+lazy_static = "1.4.0"
+inventory = "0.3"
+once_cell = "1.17"
