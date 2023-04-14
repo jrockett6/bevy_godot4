@@ -25,6 +25,9 @@ fn build_app(app: &mut App) {
         .add_system(my_other_system)
 }
 ```
+- Cargo build your project, and make sure the dll is found by Godot via the .gdextension file. You should now have the BevyApp node avaiable to you in the Godot editor (though you may need to restart the editor). 
+Recommended setup is to add this BevyApp node as a Godot autoload.
+
 
 ## Features
 
