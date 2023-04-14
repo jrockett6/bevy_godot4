@@ -24,8 +24,6 @@ impl NodeVirtual for BevyApp {
     }
 
     fn ready(&mut self) {
-        println!("readyy!!!");
-
         let mut app = App::new();
         (APP_BUILDER_FN.lock().unwrap().as_mut().unwrap())(&mut app);
         app.add_plugin(bevy::core::TaskPoolPlugin::default())
@@ -38,10 +36,10 @@ impl NodeVirtual for BevyApp {
             .add_plugin(crate::scene::PackedScenePlugin)
             .add_plugin(crate::assets::GodotAssetsPlugin)
             .init_non_send_resource::<crate::scene_tree::SceneTreeRefImpl>();
-
-        self.app = Some(app);
         // .add_plugin(GodotSignalsPlugin)
         // .add_plugin(GodotInputEventPlugin);
+
+        self.app = Some(app);
     }
 
     fn process(&mut self, _delta: f64) {

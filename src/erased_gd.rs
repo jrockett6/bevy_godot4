@@ -26,7 +26,7 @@ impl ErasedGd {
     /// # SAFETY
     /// When using ErasedGodotRef as a Bevy Resource or Component, do not create duplicate references
     /// to the same instance because Godot is not completely thread-safe.
-    /// 
+    ///
     /// TODO
     /// Could these type bounds be more flexible to accomodate other types that are not ref-counted
     /// but don't inherit Node
@@ -44,7 +44,7 @@ pub struct ErasedGdResource {
 }
 
 impl ErasedGdResource {
-    pub fn new(reference: Gd<Resource>) -> Self {
+    pub(crate) fn new(reference: Gd<Resource>) -> Self {
         // println!(
         //     "pre inc: {:?}",
         //     reference
