@@ -7,9 +7,9 @@ edition = "2021"
 crate-type = ["lib", "cdylib"]
 
 [dependencies]
+anyhow = "1"
 bevy = {version = "0.10", default-features = false, features = ["bevy_asset"]}
 godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }
 bevy_godot4_proc_macros = { path = "./proc_macros" }
 lazy_static = "1.4.0"
-inventory = "0.3"
-once_cell = "1.17"
+send_wrapper = "0.6"

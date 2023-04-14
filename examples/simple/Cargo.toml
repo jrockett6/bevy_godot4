@@ -12,5 +12,7 @@ name = "simple"
 crate-type = ["cdylib"]
 
 [dependencies]
+bevy = {version = "0.10", default-features = false, features = ["bevy_asset"]}
+bevy_asset_loader = "0.16.0"
 bevy_godot4 = { path = "../../../bevy_godot4" }
 godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }

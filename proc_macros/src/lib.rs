@@ -30,7 +30,7 @@ pub fn bevy_app(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
                 // }
 
-                let mut app_builder_func = bevy_godot4::app::APP_BUILDER_FN.lock().unwrap();
+                let mut app_builder_func = APP_BUILDER_FN.lock().unwrap();
                 if app_builder_func.is_none() {
                     *app_builder_func = Some(Box::new(#name));
                 }

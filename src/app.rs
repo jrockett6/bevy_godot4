@@ -11,7 +11,6 @@ lazy_static::lazy_static! {
     pub static ref APP_BUILDER_FN: Mutex<Option<Box<dyn Fn(&mut App) + Send>>> = Mutex::new(None);
 }
 
-
 #[derive(GodotClass, Default)]
 #[class(base=Node)]
 struct BevyApp {
@@ -35,7 +34,10 @@ impl NodeVirtual for BevyApp {
             .add_plugin(bevy::core::FrameCountPlugin)
             .add_plugin(bevy::diagnostic::DiagnosticsPlugin)
             .add_plugin(bevy::time::TimePlugin)
-            .add_plugin(bevy::hierarchy::HierarchyPlugin);
+            .add_plugin(bevy::hierarchy::HierarchyPlugin)
+            .add_plugin(crate::scene::PackedScenePlugin)
+            .add_plugin(crate::assets::GodotAssetsPlugin)
+            .init_non_send_resource::<crate::scene_tree::SceneTreeRefImpl>();
 
         self.app = Some(app);
         // .add_plugin(GodotSignalsPlugin)

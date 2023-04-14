@@ -1,13 +1,23 @@
-pub mod app;
-pub mod component;
-pub mod utils;
+mod app;
+mod assets;
+mod erased_gd;
+mod input;
+mod scene;
+mod scene_tree;
+mod signals;
+mod utils;
 
 pub use bevy;
 pub use godot;
 pub mod prelude {
-    pub use godot::prelude::gdextension;
-    pub use super::component::GdComponent;
-    pub use super::utils::{GodotPhysicsFrame, GodotVisualFrame, SystemDeltaTimer};
+    pub use super::app::APP_BUILDER_FN;
+    pub use super::erased_gd::{ErasedGd, ErasedGdResource};
+    pub use super::scene::GodotScene;
+    pub use super::scene_tree::SceneTreeRef;
+    pub use super::utils::{
+        AsPhysicsSystem, AsVisualSystem, GodotPhysicsFrame, GodotVisualFrame, SystemDeltaTimer,
+    };
+    pub use bevy::prelude::*;
     pub use bevy_godot4_proc_macros::bevy_app;
-    pub use lazy_static;
+    pub use godot::prelude::*;
 }

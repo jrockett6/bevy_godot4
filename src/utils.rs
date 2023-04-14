@@ -39,9 +39,6 @@ impl<Params, T: IntoSystem<(), (), Params>> AsVisualSystem<Params> for T {
     }
 }
 
-#[deprecated]
-pub type SystemDelta<'w, 's> = SystemDeltaTimer<'w, 's>;
-
 /// SystemParam to keep track of an independent delta time
 ///
 /// Not every system runs on a Bevy update and Bevy can be updated multiple
