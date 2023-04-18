@@ -4,18 +4,18 @@ Bring the design power of Bevy's ECS to the mature engine capabilities of Godot 
 
 *WARNING:* This crate is very early in development, and is very untested.
 
-The architecture in this crate and most code is shamelessly taken from [bevy_godot](https://github.com/rand0m-cloud/bevy_godot), a similar crate for working with Godot 3 and gdnative.
+The architecture in this crate and most code is shamelessly taken from [bevy_godot](https://github.com/rand0m-cloud/bevy_godot), a similar crate for working with Godot 3 and gdnative. This crate will most likely be merged back into that one at some point.
 
 ## Setup
 
 - Follow the steps outlined in the [GDExtension setup](https://github.com/godot-rust/gdext#getting-started) 
 
-- Clone this repo and add it as a dependency in your Cargo.toml:
+- Add this line to your cargo dependencies (along with the godot dependency from GDextension setup):
 ```
 [dependencies]
 godot = { from gdext setup }
 ...
-bevy_godot4 = { path = "path/to/bevy_godot4/Cargo.toml" }
+bevy_godot4 = { git = "https://github.com/jrockett6/bevy_godot4", branch = "main" }
 ```
 - Create a function that takes a `&mut App` and builds your bevy app, and annotate it with `#[bevy_app]`:
 ```rust
@@ -25,9 +25,7 @@ fn build_app(app: &mut App) {
         .add_system(my_other_system)
 }
 ```
-- Cargo build your project, and make sure the dll is found by Godot via the .gdextension file. You should now have the BevyApp node avaiable to you in the Godot editor (though you may need to restart the editor). 
-Recommended setup is to add this BevyApp node as a Godot autoload.
-
+- Cargo build your project, and make sure the dll is found by Godot via the .gdextension file. You should now have the BevyApp node avaiable to you in the Godot editor (though you may need to restart the editor). You can now add this BevyApp node as a Godot autoload.
 
 ## Features
 
@@ -57,7 +55,7 @@ Use `as_visual_system()` and `as_physics_system()` to schedule your systems to r
 app.add_system(set_positions.as_physics_system())
 ```
 
-## Preload godot scenes and bevy loading states, and spawn scenes as `ErasedGd` components
+## Preload godot PackedScene resources in bevy loading states, and spawn scenes as `ErasedGd` components
 
 Godot scenes (`.tscn` files)  can be "preloaded" (loaded in a dedicated Bevy loading `State`) in an `AssetCollection` with the use of `bevy_asset_loader`.
 
@@ -67,7 +65,6 @@ fn spawn_sprite(mut commands: Commands, assets: Res<MyAssets>) {
     commands.spawn(GodotScene::from_handle(&assets.sprite));
 }
 ```
-
 
 Checkout the examples folder for more.
 
