@@ -31,7 +31,7 @@ fn build_app(app: &mut App) {
 
 At it's core, this crate is just a rust Godot node holding a bevy app that you can add as an autoload (singleton) in your Godot app. 
 
-This crate also provides utilities to be able to work with Godot systems from within the Bevy framework, such as:
+This crate also provides utilities to be able to work with Godot's systems from within the Bevy framework, such as:
 
 ## Godot nodes as components
 
