@@ -10,7 +10,6 @@ mod utils;
 pub use bevy;
 pub use godot;
 pub mod prelude {
-    pub use super::app::APP_BUILDER_FN;
     pub use super::erased_gd::{ErasedGd, ErasedGdResource};
     pub use super::scene::GodotScene;
     pub use super::scene_tree::SceneTreeRef;
@@ -21,3 +20,4 @@ pub mod prelude {
     pub use bevy_godot4_proc_macros::bevy_app;
     pub use godot::prelude::*;
 }
+pub use app::{BevyApp, APP_BUILDER_FN};

@@ -39,10 +39,7 @@ pub(crate) struct SceneTreeRefImpl(Gd<SceneTree>);
 impl SceneTreeRefImpl {
     fn get_ref() -> Gd<SceneTree> {
         let engine = Engine::singleton();
-        engine
-            .get_main_loop()
-            .and_then(|lp| Some(lp.try_cast::<SceneTree>()?))
-            .unwrap()
+        engine.get_main_loop().unwrap().cast::<SceneTree>()
     }
 }
 

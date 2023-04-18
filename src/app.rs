@@ -13,7 +13,7 @@ lazy_static::lazy_static! {
 
 #[derive(GodotClass, Default)]
 #[class(base=Node)]
-struct BevyApp {
+pub struct BevyApp {
     app: Option<App>,
 }
 
