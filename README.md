@@ -35,7 +35,7 @@ This crate also provides utilities to be able to work with Godot's systems from 
 
 ## Godot nodes as components
 
-`ErasedGd` is a Bevy component that holds Godot node instance id's. You can Query for these and `get::<T: Node>()` the node in your systems, e.g:
+`ErasedGd` is a Bevy component that holds Godot node instance id's. You can `Query` for these and `get::<T: Node>()` the node in your systems, e.g:
 
 ```rust
 fn set_positions(mut erased_gds: Query<&mut ErasedGd>) {
