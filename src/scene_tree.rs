@@ -14,22 +14,6 @@ impl<'w, 's> SceneTreeRef<'w, 's> {
     pub fn get(&mut self) -> Gd<SceneTree> {
         self.gd.0.share()
     }
-
-    // pub fn get_current_scene(&mut self) -> TRef<Node> {
-    //     unsafe { self.get().current_scene().unwrap().assume_safe() }
-    // }
-
-    // pub fn get_root(&mut self) -> TRef<Viewport> {
-    //     unsafe { self.get().root().unwrap().assume_safe() }
-    // }
-
-    // pub fn add_to_scene<T: SubClass<Node>>(&mut self, node: TRef<T>) {
-    //     self.get_current_scene().add_child(node.upcast(), true);
-    // }
-
-    // pub fn add_to_root<T: SubClass<Node>>(&mut self, node: TRef<T>) {
-    //     self.get_root().add_child(node.upcast(), true);
-    // }
 }
 
 #[doc(hidden)]
@@ -38,8 +22,8 @@ pub(crate) struct SceneTreeRefImpl(Gd<SceneTree>);
 
 impl SceneTreeRefImpl {
     fn get_ref() -> Gd<SceneTree> {
-        let engine = Engine::singleton();
-        engine.get_main_loop().unwrap().cast::<SceneTree>()
+        Engine::singleton()
+        .get_main_loop().unwrap().cast::<SceneTree>()
     }
 }
 
