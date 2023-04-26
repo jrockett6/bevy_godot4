@@ -23,7 +23,9 @@ pub(crate) struct SceneTreeRefImpl(Gd<SceneTree>);
 impl SceneTreeRefImpl {
     fn get_ref() -> Gd<SceneTree> {
         Engine::singleton()
-        .get_main_loop().unwrap().cast::<SceneTree>()
+            .get_main_loop()
+            .unwrap()
+            .cast::<SceneTree>()
     }
 }
 

@@ -17,6 +17,12 @@ pub struct BevyApp {
     app: Option<App>,
 }
 
+impl BevyApp {
+    pub fn get_app(&mut self) -> Option<&mut App> {
+        self.app.as_mut()
+    }
+}
+
 #[godot_api]
 impl NodeVirtual for BevyApp {
     fn init(_base: Base<Node>) -> Self {
