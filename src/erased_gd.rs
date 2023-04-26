@@ -37,14 +37,22 @@ impl ErasedGd {
     }
 }
 
-#[derive(Debug, TypeUuid)]
+#[derive(Debug, TypeUuid, Resource)]
 #[uuid = "c3bd07de-eade-4cb0-9392-7c21394286f8"]
 pub struct ErasedGdResource {
     resource_id: InstanceId,
 }
 
 impl ErasedGdResource {
-    pub(crate) fn new(reference: Gd<Resource>) -> Self {
+    pub fn get(&mut self) -> Gd<Resource> {
+        self.try_get().unwrap()
+    }
+
+    pub fn try_get(&mut self) -> Option<Gd<Resource>> {
+        Gd::try_from_instance_id(self.resource_id)
+    }
+
+    pub fn new(reference: Gd<Resource>) -> Self {
         // println!(
         //     "pre inc: {:?}",
         //     reference
@@ -59,13 +67,17 @@ impl ErasedGdResource {
             resource_id: reference.instance_id(),
         }
     }
+}
 
-    pub fn get(&mut self) -> Gd<Resource> {
-        self.try_get().unwrap()
-    }
+impl Clone for ErasedGdResource {
+    fn clone(&self) -> Self {
+        StaticRefCount::maybe_inc_ref::<Resource>(
+            &Gd::try_from_instance_id(self.resource_id).unwrap(),
+        );
 
-    pub fn try_get(&mut self) -> Option<Gd<Resource>> {
-        Gd::try_from_instance_id(self.resource_id)
+        Self {
+            resource_id: self.resource_id.clone(),
+        }
     }
 }
 

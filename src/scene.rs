@@ -19,6 +19,7 @@ impl Plugin for PackedScenePlugin {
 pub enum GodotScene {
     Path(String),
     Handle(Handle<ErasedGdResource>),
+    Resource(ErasedGdResource),
 }
 
 impl GodotScene {
@@ -28,6 +29,10 @@ impl GodotScene {
 
     pub fn from_handle(handle: &Handle<ErasedGdResource>) -> Self {
         Self::Handle(handle.clone())
+    }
+
+    pub fn from_resource(res: ErasedGdResource) -> Self {
+        Self::Resource(res)
     }
 }
 
@@ -40,9 +45,9 @@ fn spawn_scene(
     mut assets: ResMut<Assets<ErasedGdResource>>,
     mut scene_tree: SceneTreeRef,
 ) {
-    for (scene, ent) in new_scenes.iter_mut() {
+    for (mut scene, ent) in new_scenes.iter_mut() {
         let mut resource_loader = ResourceLoader::singleton();
-        let packed_scene = match &scene.as_ref() {
+        let packed_scene = match scene.as_mut() {
             GodotScene::Handle(handle) => assets
                 .get_mut(handle)
                 .expect("packed scene to exist in assets")
@@ -54,6 +59,7 @@ fn spawn_scene(
                     CacheMode::CACHE_MODE_REUSE,
                 )
                 .expect("packed scene to load"),
+            GodotScene::Resource(res) => res.get(),
         };
 
         let instance = packed_scene
