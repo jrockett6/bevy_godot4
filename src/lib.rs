@@ -1,10 +1,8 @@
 mod app;
 mod assets;
 mod erased_gd;
-mod input;
 mod scene;
 mod scene_tree;
-mod signals;
 mod utils;
 
 pub use bevy;

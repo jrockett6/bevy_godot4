@@ -28,9 +28,9 @@ fn build_app(app: &mut App) {
             move_sprite
                 .as_physics_system()
                 .run_if(in_state(GameState::Playing)),
-        )
-        .add_system(hello_physics_update.as_physics_system())
-        .add_system(hello_visual_update.as_visual_system());
+        );
+        // .add_system(hello_physics_update.as_physics_system())
+        // .add_system(hello_visual_update.as_visual_system());
 }
 
 fn spawn_sprite(mut commands: Commands, assets: Res<MyAssets>) {
@@ -50,10 +50,12 @@ fn move_sprite(mut sprite: Query<&mut ErasedGd>, mut delta: SystemDeltaTimer) {
     }
 }
 
+#[allow(dead_code)]
 fn hello_physics_update() {
     println!("hello physics update")
 }
 
+#[allow(dead_code)]
 fn hello_visual_update() {
     println!("hello visual update")
 }
