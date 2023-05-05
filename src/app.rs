@@ -1,6 +1,6 @@
-use super::prelude::{GodotPhysicsFrame, GodotVisualFrame};
+use super::prelude::{ErasedInputEvent, GodotPhysicsFrame, GodotVisualFrame};
 use bevy::prelude::*;
-use godot::prelude::*;
+use godot::{engine::InputEvent, prelude::*};
 use std::{
     panic::{catch_unwind, resume_unwind, AssertUnwindSafe},
     sync::Mutex,
@@ -18,8 +18,16 @@ pub struct BevyApp {
 }
 
 impl BevyApp {
-    pub fn get_app(&mut self) -> Option<&mut App> {
-        self.app.as_mut()
+    /// Get access to the Bevy app.
+    ///
+    /// This is useful if you need to modify the Bevy [World] directly (via `App.world`)
+    ///
+    /// SAFETY: Make sure this is not called before the app has been added to the engine - ready(
+    /// must be called by Godot prior to accessing the app
+    pub fn get_app(&mut self) -> &mut App {
+        self.app
+            .as_mut()
+            .expect("ready() to be called by Godot prior to this")
     }
 }
 
@@ -30,20 +38,25 @@ impl NodeVirtual for BevyApp {
     }
 
     fn ready(&mut self) {
+        // Build Bevy app
         let mut app = App::new();
-        (APP_BUILDER_FN.lock().unwrap().as_mut().unwrap())(&mut app);
-        app.add_plugin(bevy::core::TaskPoolPlugin::default())
+        app
+            // Necessary Bevy plugins
+            .add_plugin(bevy::core::TaskPoolPlugin::default())
             .add_plugin(bevy::log::LogPlugin::default())
             .add_plugin(bevy::core::TypeRegistrationPlugin)
             .add_plugin(bevy::core::FrameCountPlugin)
             .add_plugin(bevy::diagnostic::DiagnosticsPlugin)
             .add_plugin(bevy::time::TimePlugin)
             .add_plugin(bevy::hierarchy::HierarchyPlugin)
+            // Crate plugins, resources, and events
             .add_plugin(crate::scene::PackedScenePlugin)
             .add_plugin(crate::assets::GodotAssetsPlugin)
-            .init_non_send_resource::<crate::scene_tree::SceneTreeRefImpl>();
-        // .add_plugin(GodotSignalsPlugin)
-        // .add_plugin(GodotInputEventPlugin);
+            .init_non_send_resource::<crate::scene_tree::SceneTreeRefImpl>()
+            .add_event::<ErasedInputEvent>();
+
+        // Build user provided app
+        (APP_BUILDER_FN.lock().unwrap().as_mut().unwrap())(&mut app);
 
         self.app = Some(app);
     }
@@ -76,5 +89,19 @@ impl NodeVirtual for BevyApp {
 
             app.world.remove_resource::<GodotPhysicsFrame>();
         }
+    }
+
+    fn input(&mut self, event: Gd<InputEvent>) {
+        // let event: Gd<InputEvent> = Gd::try_from_instance_id(event.instance_id()).unwrap();
+        // println!("{:?}", event);
+        // println!("{:?}", input_event.get());
+        let input_event = ErasedInputEvent::new(event);
+        self.app
+            .as_mut()
+            .unwrap()
+            .world
+            .get_resource_mut::<Events<ErasedInputEvent>>()
+            .unwrap()
+            .send(input_event);
     }
 }

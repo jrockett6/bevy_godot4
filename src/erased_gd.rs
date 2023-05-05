@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use bevy::reflect::TypeUuid;
 use godot::{
-    engine::Resource,
+    engine::{InputEvent, Resource},
     obj::mem::{Memory, StaticRefCount},
     sys,
 };
@@ -53,14 +53,6 @@ impl ErasedGdResource {
     }
 
     pub fn new(reference: Gd<Resource>) -> Self {
-        // println!(
-        //     "pre inc: {:?}",
-        //     reference
-        //         .share()
-        //         .upcast::<RefCounted>()
-        //         .get_reference_count()
-        // );
-
         StaticRefCount::maybe_inc_ref(&reference.share());
 
         Self {
@@ -82,6 +74,77 @@ impl Clone for ErasedGdResource {
 }
 
 impl Drop for ErasedGdResource {
+    fn drop(&mut self) {
+        let gd = self.get();
+        let is_last = StaticRefCount::maybe_dec_ref(&gd); // may drop
+        if is_last {
+            unsafe {
+                sys::interface_fn!(object_destroy)(gd.obj_sys());
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ErasedInputEvent {
+    event_id: InstanceId,
+}
+
+impl ErasedInputEvent {
+    pub fn get(&self) -> Gd<Object> {
+        self.try_get().unwrap()
+    }
+
+    pub fn try_get(&self) -> Option<Gd<Object>> {
+        println!("{:?}", self.event_id);
+        Gd::try_from_instance_id(self.event_id)
+    }
+
+    pub fn new(reference: Gd<InputEvent>) -> Self {
+        println!("id: {:?}", reference.instance_id_or_none());
+        println!("isvalid: {:?}", reference.is_instance_valid());
+
+        // println!(
+        //     "pre inc: {:?}",
+        //     reference
+        //         .share()
+        //         .upcast::<RefCounted>()
+        //         .get_reference_count()
+        // );
+
+        println!("pre inc: {:?}", reference.get_reference_count());
+
+        StaticRefCount::maybe_inc_ref(&reference);
+
+        println!("post inc: {:?}", reference.get_reference_count());
+
+        // println!(
+        //     "post inc: {:?}",
+        //     reference
+        //         .share()
+        //         .upcast::<RefCounted>()
+        //         .get_reference_count()
+        // );
+
+        Self {
+            event_id: reference.instance_id(),
+        }
+    }
+}
+
+// impl Clone for ErasedInputEvent {
+//     fn clone(&self) -> Self {
+//         StaticRefCount::maybe_inc_ref::<InputEvent>(
+//             &Gd::try_from_instance_id(self.event_id).unwrap(),
+//         );
+
+//         Self {
+//             event_id: self.event_id.clone(),
+//         }
+//     }
+// }
+
+impl Drop for ErasedInputEvent {
     fn drop(&mut self) {
         let gd = self.get();
         let is_last = StaticRefCount::maybe_dec_ref(&gd); // may drop

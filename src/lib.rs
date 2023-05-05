@@ -10,7 +10,7 @@ mod utils;
 pub use bevy;
 pub use godot;
 pub mod prelude {
-    pub use super::erased_gd::{ErasedGd, ErasedGdResource};
+    pub use super::erased_gd::{ErasedGd, ErasedGdResource, ErasedInputEvent};
     pub use super::scene::GodotScene;
     pub use super::scene_tree::SceneTreeRef;
     pub use super::utils::{
