@@ -29,12 +29,14 @@ fn build_app(app: &mut App) {
                 .as_physics_system()
                 .run_if(in_state(GameState::Playing)),
         );
-        // .add_system(hello_physics_update.as_physics_system())
-        // .add_system(hello_visual_update.as_visual_system());
+    // .add_system(hello_physics_update.as_physics_system())
+    // .add_system(hello_visual_update.as_visual_system());
 }
 
 fn spawn_sprite(mut commands: Commands, assets: Res<MyAssets>) {
-    commands.spawn(GodotScene::from_handle(&assets.sprite));
+    commands.spawn(
+        GodotScene::from_handle(&assets.sprite).with_translation2d(Vector2 { x: 200.0, y: 200.0 }),
+    );
 }
 
 fn move_sprite(mut sprite: Query<&mut ErasedGd>, mut delta: SystemDeltaTimer) {
