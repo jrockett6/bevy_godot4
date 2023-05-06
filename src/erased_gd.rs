@@ -53,14 +53,6 @@ impl ErasedGdResource {
     }
 
     pub fn new(reference: Gd<Resource>) -> Self {
-        // println!(
-        //     "pre inc: {:?}",
-        //     reference
-        //         .share()
-        //         .upcast::<RefCounted>()
-        //         .get_reference_count()
-        // );
-
         StaticRefCount::maybe_inc_ref(&reference.share());
 
         Self {
