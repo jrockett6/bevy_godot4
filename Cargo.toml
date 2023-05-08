@@ -6,6 +6,9 @@ edition = "2021"
 [lib]
 crate-type = ["lib", "cdylib"]
 
+[features]
+serde = ["godot/serde"]
+
 [dependencies]
 anyhow = "1"
 bevy = {version = "0.10", default-features = false, features = ["bevy_asset"]}
