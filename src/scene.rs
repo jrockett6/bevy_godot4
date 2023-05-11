@@ -120,11 +120,22 @@ fn spawn_scene(
             .instantiate(GenEditState::GEN_EDIT_STATE_DISABLED)
             .unwrap();
 
-        scene_tree.get().get_current_scene().unwrap().add_child(
-            instance.share(),
-            false,
-            InternalMode::INTERNAL_MODE_DISABLED,
-        );
+        match scene_tree
+            .get()
+            .get_root()
+            .unwrap()
+            .get_node("BevyAppSingleton".into())
+        {
+            Some(mut app) => app.add_child(
+                instance.share(),
+                false,
+                InternalMode::INTERNAL_MODE_DISABLED,
+            ),
+            None => {
+                tracing::error!("attempted to add a child to the BevyAppSingleton autoload, but the BevyAppSingleton autoload wasn't found");
+                return;
+            }
+        }
 
         if let Some(transform) = &scene.transform {
             match transform {
@@ -136,9 +147,9 @@ fn spawn_scene(
                 }
                 GodotSceneTransform::Transform3D(transform) => {
                     match instance.share().try_cast::<Node3D>() {
-                    Some(mut node3d) => node3d.set_global_transform(*transform),
-                    None => tracing::error!("attempted to spawn a scene with a transform on Node that did not inherit from Node3D, the transform was not set"),
-                }
+                        Some(mut node3d) => node3d.set_global_transform(*transform),
+                        None => tracing::error!("attempted to spawn a scene with a transform on Node that did not inherit from Node3D, the transform was not set"),
+                    }
                 }
             }
         }

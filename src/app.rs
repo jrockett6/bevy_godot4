@@ -30,6 +30,10 @@ impl NodeVirtual for BevyApp {
     }
 
     fn ready(&mut self) {
+        if godot::engine::Engine::singleton().is_editor_hint() {
+            return;
+        }
+
         let mut app = App::new();
         (APP_BUILDER_FN.lock().unwrap().as_mut().unwrap())(&mut app);
         app.add_plugin(bevy::core::TaskPoolPlugin::default())
@@ -49,6 +53,10 @@ impl NodeVirtual for BevyApp {
     }
 
     fn process(&mut self, _delta: f64) {
+        if godot::engine::Engine::singleton().is_editor_hint() {
+            return;
+        }
+
         if let Some(app) = self.app.as_mut() {
             app.insert_resource(GodotVisualFrame);
 
@@ -64,6 +72,10 @@ impl NodeVirtual for BevyApp {
     }
 
     fn physics_process(&mut self, _delta: f64) {
+        if godot::engine::Engine::singleton().is_editor_hint() {
+            return;
+        }
+
         if let Some(app) = self.app.as_mut() {
             app.insert_resource(GodotPhysicsFrame);
 
