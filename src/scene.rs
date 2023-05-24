@@ -24,9 +24,10 @@ pub struct GodotScene {
 
 #[derive(Debug)]
 enum GodotSceneResource {
-    Path(String),
-    Handle(Handle<ErasedGdResource>),
     Resource(ErasedGdResource),
+    Path(String),
+    #[cfg(feature = "assets")]
+    Handle(Handle<ErasedGdResource>),
 }
 
 #[derive(Debug)]
@@ -36,11 +37,19 @@ enum GodotSceneTransform {
 }
 
 impl GodotScene {
+    /// Instantiate the godot scene from an ErasedGdResource.
+    pub fn from_resource(res: ErasedGdResource) -> Self {
+        Self {
+            resource: GodotSceneResource::Resource(res),
+            transform: None,
+        }
+    }
+
     /// Instantiate the godot scene from the given path.
     ///
     /// Note that this will call [`ResourceLoader`].load() - which is a blocking load.
-    /// If you want "preload" functionality, you should load your resources in a dedicated Bevy
-    /// state into a Bevy [`Resource`], and use from_handle or from_resource.
+    /// If you want "preload" functionality, you should load your resources into a Bevy [`Resource`]
+    /// and use from_resource().
     pub fn from_path(path: &str) -> Self {
         Self {
             resource: GodotSceneResource::Path(path.to_string()),
@@ -49,17 +58,10 @@ impl GodotScene {
     }
 
     /// Instantiate the godot scene from a Bevy Asset [`Handle`].
+    #[cfg(feature = "assets")]
     pub fn from_handle(handle: &Handle<ErasedGdResource>) -> Self {
         Self {
             resource: GodotSceneResource::Handle(handle.clone()),
-            transform: None,
-        }
-    }
-
-    /// Instantiate the godot scene from an ErasedGdResource.
-    pub fn from_resource(res: ErasedGdResource) -> Self {
-        Self {
-            resource: GodotSceneResource::Resource(res),
             transform: None,
         }
     }
@@ -95,15 +97,12 @@ struct GodotSceneSpawned;
 fn spawn_scene(
     mut commands: Commands,
     mut new_scenes: Query<(&mut GodotScene, Entity), Without<GodotSceneSpawned>>,
-    mut assets: ResMut<Assets<ErasedGdResource>>,
+    #[cfg(feature = "assets")] mut assets: ResMut<Assets<ErasedGdResource>>,
     mut scene_tree: SceneTreeRef,
 ) {
     for (mut scene, ent) in new_scenes.iter_mut() {
         let packed_scene = match &mut scene.resource {
-            GodotSceneResource::Handle(handle) => assets
-                .get_mut(&handle)
-                .expect("packed scene to exist in assets")
-                .get(),
+            GodotSceneResource::Resource(res) => res.get(),
             GodotSceneResource::Path(path) => ResourceLoader::singleton()
                 .load(
                     path.into(),
@@ -111,7 +110,11 @@ fn spawn_scene(
                     CacheMode::CACHE_MODE_REUSE,
                 )
                 .expect("packed scene to load"),
-            GodotSceneResource::Resource(res) => res.get(),
+            #[cfg(feature = "assets")]
+            GodotSceneResource::Handle(handle) => assets
+                .get_mut(&handle)
+                .expect("packed scene to exist in assets")
+                .get(),
         };
 
         let instance = packed_scene

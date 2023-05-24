@@ -8,6 +8,7 @@ crate-type = ["lib", "cdylib"]
 
 [features]
 serde = ["godot/serde"]
+assets = [] # experimental feature, see assets::GodotResourceLoader
 
 [dependencies]
 anyhow = "1"

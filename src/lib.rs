@@ -1,4 +1,5 @@
 mod app;
+#[cfg(feature = "assets")]
 mod assets;
 mod erased_gd;
 mod scene;

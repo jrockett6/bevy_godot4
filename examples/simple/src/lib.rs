@@ -1,41 +1,47 @@
 use bevy::ecs::prelude::*;
-use bevy_asset_loader::prelude::*;
 use bevy_godot4::prelude::*;
-use godot::engine::Sprite2D;
+use godot::engine::{resource_loader::CacheMode, ResourceLoader, Sprite2D};
 
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash, States)]
 enum GameState {
     #[default]
-    Loading,
     Playing,
-}
-
-#[derive(AssetCollection, Resource, Debug)]
-pub struct MyAssets {
-    #[asset(path = "sprite.tscn")]
-    pub sprite: Handle<ErasedGdResource>,
 }
 
 #[bevy_app]
 fn build_app(app: &mut App) {
     app.add_state::<GameState>()
-        .add_loading_state(
-            LoadingState::new(GameState::Loading).continue_to_state(GameState::Playing),
-        )
-        .add_collection_to_loading_state::<_, MyAssets>(GameState::Loading)
+        .init_resource::<MyAssets>()
         .add_system(spawn_sprite.in_schedule(OnEnter(GameState::Playing)))
         .add_system(
             move_sprite
                 .as_physics_system()
                 .run_if(in_state(GameState::Playing)),
         );
-    // .add_system(hello_physics_update.as_physics_system())
-    // .add_system(hello_visual_update.as_visual_system());
+}
+
+#[derive(Resource, Debug)]
+pub struct MyAssets {
+    pub sprite: ErasedGdResource,
+}
+
+impl Default for MyAssets {
+    fn default() -> Self {
+        let mut resource_loader = ResourceLoader::singleton();
+        let sprite = ErasedGdResource::new(
+            resource_loader
+                .load("sprite.tscn".into(), "".into(), CacheMode::CACHE_MODE_REUSE)
+                .unwrap(),
+        );
+
+        Self { sprite }
+    }
 }
 
 fn spawn_sprite(mut commands: Commands, assets: Res<MyAssets>) {
     commands.spawn(
-        GodotScene::from_handle(&assets.sprite).with_translation2d(Vector2 { x: 200.0, y: 200.0 }),
+        GodotScene::from_resource(assets.sprite.clone())
+            .with_translation2d(Vector2 { x: 200.0, y: 200.0 }),
     );
 }
 
@@ -50,14 +56,4 @@ fn move_sprite(mut sprite: Query<&mut ErasedGd>, mut delta: SystemDeltaTimer) {
             y: position.y + delta,
         });
     }
-}
-
-#[allow(dead_code)]
-fn hello_physics_update() {
-    println!("hello physics update")
-}
-
-#[allow(dead_code)]
-fn hello_visual_update() {
-    println!("hello visual update")
 }

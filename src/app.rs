@@ -46,10 +46,12 @@ impl NodeVirtual for BevyApp {
             .add_plugin(bevy::time::TimePlugin)
             .add_plugin(bevy::hierarchy::HierarchyPlugin)
             .add_plugin(crate::scene::PackedScenePlugin)
-            .add_plugin(crate::assets::GodotAssetsPlugin)
             .init_non_send_resource::<crate::scene_tree::SceneTreeRefImpl>();
         // .add_plugin(GodotSignalsPlugin)
         // .add_plugin(GodotInputEventPlugin);
+
+        #[cfg(feature = "assets")]
+        app.add_plugin(crate::assets::GodotAssetsPlugin);
 
         self.app = Some(app);
     }
