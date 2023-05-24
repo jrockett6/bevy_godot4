@@ -1,6 +1,4 @@
-use super::prelude::{GodotPhysicsFrame, GodotVisualFrame};
-use bevy::prelude::*;
-use godot::prelude::*;
+use crate::prelude::*;
 use std::{
     panic::{catch_unwind, resume_unwind, AssertUnwindSafe},
     sync::Mutex,
@@ -18,7 +16,11 @@ pub struct BevyApp {
 }
 
 impl BevyApp {
-    pub fn get_app(&mut self) -> Option<&mut App> {
+    pub fn get_app(&self) -> Option<&App> {
+        self.app.as_ref()
+    }
+
+    pub fn get_app_mut(&mut self) -> Option<&mut App> {
         self.app.as_mut()
     }
 }
