@@ -6,11 +6,11 @@ Bring the design power of Bevy's ECS to the mature engine capabilities of Godot 
 
 The architecture in this crate mimics that of [bevy_godot](https://github.com/rand0m-cloud/bevy_godot), a similar crate for working with Godot 3 and GDNative.
 
-> **Warning**: This crate, along with GDExtension, are early in development. Take neccessary caution when using them for production projects.
+> **Warning**: This crate, along with GDExtension, are early in development and are not feature complete. Have caution when using them for production projects.
 
 ## Setup
 
-1. Follow the steps outlined in the [GDExtension setup](https://github.com/godot-rust/gdext#getting-started) 
+1. Follow the steps outlined in the [GDExtension Getting Started](https://github.com/godot-rust/gdext#getting-started).
 
 2. Add this line to your cargo dependencies (along with the godot dependency from GDExtension setup):
 ```
@@ -26,7 +26,7 @@ fn build_app(app: &mut App) {
     app.add_system(my_system)
 }
 ```
-4. Cargo build your project, and make sure the dll is found by Godot via the .gdextension file. You should now have the `BevyApp` Node avaiable to you in the Godot editor (refresh the project in the editor). 
+4. Cargo build your project, and make sure the dll is found by Godot via the .gdextension file. You should now have the `BevyApp` Node avaiable to you in the Godot editor (you may need to refresh the project in the editor). 
 
 5. Add this `BevyApp` Node as a Godot autoload named `BevyAppSingleton` in the Godot project settings.
 
@@ -70,7 +70,7 @@ fn spawn_scene(
     godot_resources: Res<GodotResources>,
     mut commands: Commands,
 ) {
-    commands.spawn(GodotScene::from_resource(godot_resources.my_packed_scene));
+    commands.spawn(GodotScene::from_resource(godot_resources.my_packed_scene.clone()));
 }
 ```
 
@@ -91,7 +91,7 @@ fn my_main_thread_system(
 }
 ```
 
-Checkout the examples folder for more code.
+*Checkout the examples folder for more code.*
 
 
 
