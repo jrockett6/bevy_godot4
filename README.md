@@ -1,4 +1,7 @@
-# bevy_godot4
+
+# ![logo](logo_long.png)
+
+# Bevy_Godot4
 
 Bring the design power of Bevy's ECS to the mature engine capabilities of Godot 4.
 
