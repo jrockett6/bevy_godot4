@@ -2,11 +2,11 @@
 
 # Bevy_Godot4
 
+> **NOTICE**: This crate is currrently unmaintained, and due to changes in gdext's api it is pinned to an old version of gdext and only works with Godot 4.0
+
 Bring the design power of Bevy's ECS to the mature engine capabilities of Godot 4.
 
 The architecture in this crate mimics that of [bevy_godot](https://github.com/rand0m-cloud/bevy_godot), a similar crate for working with Godot 3 and GDNative.
-
-> **Warning**: This crate, along with GDExtension, are early in development and are not feature complete. Have caution when using them for production projects.
 
 ## Setup
 
@@ -15,8 +15,7 @@ The architecture in this crate mimics that of [bevy_godot](https://github.com/ra
 2. Add this line to your cargo dependencies (along with the godot dependency from GDExtension setup):
 ```
 [dependencies]
-godot = { from gdext setup }
-...
+godot = { git = "https://github.com/godot-rust/gdext", rev = "885bb91926c76867093d85208b33aa80c87183b6" }
 bevy_godot4 = { git = "https://github.com/jrockett6/bevy_godot4", branch = "main" }
 ```
 3. Create a function that takes a `&mut App` and builds your bevy app, and annotate it with `#[bevy_app]`:
