@@ -51,7 +51,7 @@ fn maybe_inc_ref<T: GodotClass>(gd: &Gd<T>) {
     <Object as Bounds>::DynMemory::maybe_inc_ref(&mut raw);
 }
 
-fn try_maybe_inc_ref<T: GodotClass>(gd: &Option<Gd<T>>) {
+fn maybe_inc_ref_opt<T: GodotClass>(gd: &Option<Gd<T>>) {
     if let Some(gd) = gd {
         let mygd: MyGd<T> = unsafe {
             std::mem::transmute(gd.clone())
@@ -71,7 +71,7 @@ fn maybe_dec_ref<T: GodotClass>(gd: &Gd<T>) -> bool {
     }
 }
 
-fn try_maybe_dec_ref<T: GodotClass>(gd: &Option<Gd<T>>) -> bool {
+fn maybe_dec_ref_opt<T: GodotClass>(gd: &Option<Gd<T>>) -> bool {
     if let Some(gd) = gd {
         let mygd: MyGd<T> = unsafe {
             std::mem::transmute(gd.clone())
@@ -109,7 +109,7 @@ impl Clone for ErasedGdResource {
         // StaticRefCount::maybe_inc_ref::<Resource>(
         //     &Gd::try_from_instance_id(self.resource_id).unwrap(),
         // );
-        try_maybe_inc_ref::<Resource>(&Gd::try_from_instance_id(self.resource_id).ok());
+        maybe_inc_ref_opt::<Resource>(&Gd::try_from_instance_id(self.resource_id).ok());
 
         Self {
             resource_id: self.resource_id.clone(),

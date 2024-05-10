@@ -1,7 +1,6 @@
 use bevy::ecs::prelude::*;
 use bevy_godot4::prelude::*;
-use godot::engine::{resource_loader::CacheMode, ResourceLoader, Sprite2D};
-use godot::prelude::*;
+use godot::engine::{ResourceLoader, Sprite2D};
 
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash, States)]
 enum GameState {
