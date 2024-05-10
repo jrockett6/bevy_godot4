@@ -15,7 +15,7 @@ The architecture in this crate mimics that of [bevy_godot](https://github.com/ra
 2. Add this line to your cargo dependencies (along with the godot dependency from GDExtension setup):
 ```
 [dependencies]
-godot = { git = "https://github.com/godot-rust/gdext", branch = "main" }
+godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }
 bevy_godot4 = { git = "https://github.com/jrockett6/bevy_godot4", branch = "main" }
 ```
 3. Create a function that takes a `&mut App` and builds your bevy app, and annotate it with `#[bevy_app]`:
