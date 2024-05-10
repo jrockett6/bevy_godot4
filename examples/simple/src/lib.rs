@@ -1,6 +1,7 @@
 use bevy::ecs::prelude::*;
 use bevy_godot4::prelude::*;
 use godot::engine::{resource_loader::CacheMode, ResourceLoader, Sprite2D};
+use godot::prelude::*;
 
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash, States)]
 enum GameState {
@@ -10,10 +11,10 @@ enum GameState {
 
 #[bevy_app]
 fn build_app(app: &mut App) {
-    app.add_state::<GameState>()
+    app.init_state::<GameState>()
         .init_resource::<MyAssets>()
-        .add_system(spawn_sprite.in_schedule(OnEnter(GameState::Playing)))
-        .add_system(
+        .add_systems(OnEnter(GameState::Playing), spawn_sprite)
+        .add_systems(Update,
             move_sprite
                 .as_physics_system()
                 .run_if(in_state(GameState::Playing)),
@@ -30,7 +31,7 @@ impl Default for MyAssets {
         let mut resource_loader = ResourceLoader::singleton();
         let sprite = ErasedGdResource::new(
             resource_loader
-                .load("sprite.tscn".into(), "".into(), CacheMode::CACHE_MODE_REUSE)
+                .load("sprite.tscn".into())
                 .unwrap(),
         );
 
