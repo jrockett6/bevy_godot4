@@ -12,7 +12,7 @@ pub struct SceneTreeRef<'w, 's> {
 
 impl<'w, 's> SceneTreeRef<'w, 's> {
     pub fn get(&mut self) -> Gd<SceneTree> {
-        self.gd.0.share()
+        self.gd.0.clone()
     }
 }
 

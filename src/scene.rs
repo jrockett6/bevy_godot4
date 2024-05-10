@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::prelude::*;
 use bevy::utils::tracing;
 use godot::engine::{
@@ -7,7 +9,7 @@ use godot::engine::{
 pub(crate) struct PackedScenePlugin;
 impl Plugin for PackedScenePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(spawn_scene.in_base_set(CoreSet::PostUpdate));
+        app.add_systems(PostUpdate, spawn_scene);
     }
 }
 
@@ -105,9 +107,11 @@ fn spawn_scene(
             GodotSceneResource::Resource(res) => res.get(),
             GodotSceneResource::Path(path) => ResourceLoader::singleton()
                 .load(
-                    path.into(),
-                    "PackedScene".into(),
-                    CacheMode::CACHE_MODE_REUSE,
+                    // path.into(),
+                    // "PackedScene".into(),
+                    GString::from_str(path).expect("path to be a valid GString"),
+                    // // CacheMode::CACHE_MODE_REUSE,
+                    // CacheMode::REUSE,
                 )
                 .expect("packed scene to load"),
             #[cfg(feature = "assets")]
@@ -120,19 +124,18 @@ fn spawn_scene(
         let instance = packed_scene
             .try_cast::<PackedScene>()
             .expect("resource to be a packed scene")
-            .instantiate(GenEditState::GEN_EDIT_STATE_DISABLED)
+            // .instantiate(GenEditState::GEN_EDIT_STATE_DISABLED)
+            .instantiate()
             .unwrap();
 
         match scene_tree
             .get()
             .get_root()
             .unwrap()
-            .get_node("BevyAppSingleton".into())
+            .get_node_or_null("BevyAppSingleton".into())
         {
             Some(mut app) => app.add_child(
-                instance.share(),
-                false,
-                InternalMode::INTERNAL_MODE_DISABLED,
+                instance.clone(),
             ),
             None => {
                 tracing::error!("attempted to add a child to the BevyAppSingleton autoload, but the BevyAppSingleton autoload wasn't found");
@@ -143,13 +146,13 @@ fn spawn_scene(
         if let Some(transform) = &scene.transform {
             match transform {
                 GodotSceneTransform::Transform2D(transform) => {
-                    match instance.share().try_cast::<Node2D>() {
+                    match instance.clone().try_cast::<Node2D>().ok() {
                         Some(mut node2d) => node2d.set_global_transform(*transform),
                         None => tracing::error!("attempted to spawn a scene with a transform on Node that did not inherit from Node3D, the transform was not set"),
                     }
                 }
                 GodotSceneTransform::Transform3D(transform) => {
-                    match instance.share().try_cast::<Node3D>() {
+                    match instance.clone().try_cast::<Node3D>().ok() {
                         Some(mut node3d) => node3d.set_global_transform(*transform),
                         None => tracing::error!("attempted to spawn a scene with a transform on Node that did not inherit from Node3D, the transform was not set"),
                     }
