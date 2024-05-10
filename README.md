@@ -2,7 +2,7 @@
 
 # Bevy_Godot4
 
-> **NOTICE**: This crate is currrently unmaintained, and due to changes in gdext's api it is pinned to an old version of gdext and only works with Godot 4.0
+<!-- > **NOTICE**: This crate is currrently unmaintained, and due to changes in gdext's api it is pinned to an old version of gdext and only works with Godot 4.0 -->
 
 Bring the design power of Bevy's ECS to the mature engine capabilities of Godot 4.
 
