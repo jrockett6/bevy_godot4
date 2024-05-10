@@ -7,7 +7,7 @@ use godot::engine::{
 pub(crate) struct PackedScenePlugin;
 impl Plugin for PackedScenePlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_scene.in_base_set(CoreSet::PostUpdate));
+        app.add_systems(spawn_scene.in_base_set(CoreSet::PostUpdate));
     }
 }
 
