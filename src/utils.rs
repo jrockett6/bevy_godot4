@@ -33,11 +33,11 @@ pub trait AsVisualSystem<Params> {
     fn as_visual_system(self) -> SystemConfigs;
 }
 
-// impl<Params, T: IntoSystem<(), (), Params>> AsVisualSystem<Params> for T {
-//     fn as_visual_system(self) -> SystemConfig {
-//         self.run_if(resource_exists::<GodotVisualFrame>)
-//     }
-// }
+impl<Params, T: IntoSystem<(), (), Params>> AsVisualSystem<Params> for T {
+    fn as_visual_system(self) -> SystemConfigs {
+        self.run_if(resource_exists::<GodotVisualFrame>)
+    }
+}
 
 /// SystemParam to keep track of an independent delta time
 ///
