@@ -1,5 +1,5 @@
 use bevy::{
-    ecs::{schedule::{SystemConfig, SystemConfigs}, system::SystemParam},
+    ecs::{schedule::SystemConfigs, system::SystemParam},
     prelude::*,
 };
 use std::{
