@@ -107,11 +107,7 @@ fn spawn_scene(
             GodotSceneResource::Resource(res) => res.get(),
             GodotSceneResource::Path(path) => ResourceLoader::singleton()
                 .load(
-                    // path.into(),
-                    // "PackedScene".into(),
                     GString::from_str(path).expect("path to be a valid GString"),
-                    // // CacheMode::CACHE_MODE_REUSE,
-                    // CacheMode::REUSE,
                 )
                 .expect("packed scene to load"),
             #[cfg(feature = "assets")]
@@ -124,7 +120,6 @@ fn spawn_scene(
         let instance = packed_scene
             .try_cast::<PackedScene>()
             .expect("resource to be a packed scene")
-            // .instantiate(GenEditState::GEN_EDIT_STATE_DISABLED)
             .instantiate()
             .unwrap();
 
