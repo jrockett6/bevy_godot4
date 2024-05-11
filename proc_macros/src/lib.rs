@@ -11,8 +11,8 @@ pub fn bevy_app(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
         #[gdextension]
         unsafe impl ExtensionLibrary for BevyExtensionLibrary {
-            fn on_level_init(level: bevy_godot4::prelude::InitLevel) {
-                if level == bevy_godot4::prelude::InitLevel::Editor {
+            fn on_level_init(level: bevy_godot4::godot::prelude::InitLevel) {
+                if level == bevy_godot4::godot::prelude::InitLevel::Editor {
                     bevy_godot4::godot::private::class_macros::auto_register_classes(level);
 
                     let mut app_builder_func = bevy_godot4::APP_BUILDER_FN.lock().unwrap();
