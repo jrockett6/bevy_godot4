@@ -12,11 +12,13 @@ pub fn bevy_app(_attr: TokenStream, item: TokenStream) -> TokenStream {
         #[gdextension]
         unsafe impl ExtensionLibrary for BevyExtensionLibrary {
             fn on_level_init(level: bevy_godot4::prelude::InitLevel) {
-                bevy_godot4::godot::private::class_macros::auto_register_classes(level);
+                if level == bevy_godot4::prelude::InitLevel::Editor {
+                    bevy_godot4::godot::private::class_macros::auto_register_classes(level);
 
-                let mut app_builder_func = bevy_godot4::APP_BUILDER_FN.lock().unwrap();
-                if app_builder_func.is_none() {
-                    *app_builder_func = Some(Box::new(#name));
+                    let mut app_builder_func = bevy_godot4::APP_BUILDER_FN.lock().unwrap();
+                    if app_builder_func.is_none() {
+                        *app_builder_func = Some(Box::new(#name));
+                    }
                 }
             }
 
