@@ -39,42 +39,44 @@ impl ErasedGd {
 pub struct ErasedGdResource {
     resource_id: InstanceId,
 }
-struct MyGd<T: GodotClass> {
+
+/// used to access raw (RawGd) object
+struct Gd_<T: GodotClass> {
     raw: RawGd<T>,
 }
 
 fn maybe_inc_ref<T: GodotClass>(gd: &mut Gd<T>) {
-    let mygd: &mut MyGd<T> = unsafe {
+    let gd_: &mut Gd_<T> = unsafe {
         std::mem::transmute(gd)
     };
-    <Object as Bounds>::DynMemory::maybe_inc_ref(&mut mygd.raw);
+    <Object as Bounds>::DynMemory::maybe_inc_ref(&mut gd_.raw);
 }
 
 fn maybe_inc_ref_opt<T: GodotClass>(gd: &mut Option<Gd<T>>) {
     if let Some(gd) = gd {
-        let mygd: &mut MyGd<T> = unsafe {
+        let gd_: &mut Gd_<T> = unsafe {
             std::mem::transmute(gd)
         };
-        <Object as Bounds>::DynMemory::maybe_inc_ref(&mut mygd.raw);
+        <Object as Bounds>::DynMemory::maybe_inc_ref(&mut gd_.raw);
     }
 }
 
 fn maybe_dec_ref<T: GodotClass>(gd: &mut Gd<T>) -> bool {
-    let mygd: &mut MyGd<T> = unsafe {
+    let gd_: &mut Gd_<T> = unsafe {
         std::mem::transmute(gd)
     };
     unsafe {
-        <Object as Bounds>::DynMemory::maybe_dec_ref(&mut mygd.raw)
+        <Object as Bounds>::DynMemory::maybe_dec_ref(&mut gd_.raw)
     }
 }
 
 fn maybe_dec_ref_opt<T: GodotClass>(gd: &mut Option<Gd<T>>) -> bool {
     if let Some(gd) = gd {
-        let mygd: &mut MyGd<T> = unsafe {
+        let gd_: &mut Gd_<T> = unsafe {
             std::mem::transmute(gd)
         };
         unsafe {
-            <Object as Bounds>::DynMemory::maybe_dec_ref(&mut mygd.raw)
+            <Object as Bounds>::DynMemory::maybe_dec_ref(&mut gd_.raw)
         }
     } else {
         false
@@ -91,7 +93,6 @@ impl ErasedGdResource {
     }
 
     pub fn new(mut reference: Gd<Resource>) -> Self {
-        // StaticRefCount::maybe_inc_ref(&reference.share());
         maybe_inc_ref(&mut reference);
 
         Self {
@@ -102,9 +103,6 @@ impl ErasedGdResource {
 
 impl Clone for ErasedGdResource {
     fn clone(&self) -> Self {
-        // StaticRefCount::maybe_inc_ref::<Resource>(
-        //     &Gd::try_from_instance_id(self.resource_id).unwrap(),
-        // );
         maybe_inc_ref_opt::<Resource>(&mut Gd::try_from_instance_id(self.resource_id).ok());
 
         Self {
@@ -116,7 +114,6 @@ impl Clone for ErasedGdResource {
 impl Drop for ErasedGdResource {
     fn drop(&mut self) {
         let mut gd = self.get();
-        // let is_last = StaticRefCount::maybe_dec_ref(&gd); // may drop
         let is_last = maybe_dec_ref(&mut gd); // may drop
         if is_last {
             unsafe {
