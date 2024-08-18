@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use crate::prelude::*;
 use bevy::utils::tracing;
-use godot::engine::ResourceLoader;
+use godot::classes::ResourceLoader;
 
 pub(crate) struct PackedScenePlugin;
 impl Plugin for PackedScenePlugin {

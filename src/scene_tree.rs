@@ -1,6 +1,6 @@
 use crate::prelude::*;
 use bevy::ecs::system::SystemParam;
-use godot::engine::Engine;
+use godot::classes::Engine;
 use std::marker::PhantomData;
 
 #[derive(SystemParam)]

@@ -32,7 +32,7 @@ impl INode for BevyApp {
     }
 
     fn ready(&mut self) {
-        if godot::engine::Engine::singleton().is_editor_hint() {
+        if godot::classes::Engine::singleton().is_editor_hint() {
             return;
         }
 
@@ -57,7 +57,7 @@ impl INode for BevyApp {
     }
 
     fn process(&mut self, _delta: f64) {
-        if godot::engine::Engine::singleton().is_editor_hint() {
+        if godot::classes::Engine::singleton().is_editor_hint() {
             return;
         }
 
@@ -76,7 +76,7 @@ impl INode for BevyApp {
     }
 
     fn physics_process(&mut self, _delta: f64) {
-        if godot::engine::Engine::singleton().is_editor_hint() {
+        if godot::classes::Engine::singleton().is_editor_hint() {
             return;
         }
 

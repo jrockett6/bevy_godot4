@@ -1,7 +1,9 @@
 use crate::prelude::*;
 use godot::{
-    engine::Resource, obj::{bounds::DynMemory, Bounds}, sys,
-    obj::RawGd
+    classes::Resource,
+    obj::RawGd,
+    obj::{bounds::DynMemory, Bounds},
+    sys,
 };
 
 #[derive(Debug, Component, Clone)]
