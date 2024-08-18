@@ -1,6 +1,21 @@
-use bevy::ecs::prelude::*;
-use bevy_godot4::prelude::*;
-use godot::classes::{ResourceLoader, Sprite2D};
+use std::time::Duration;
+
+use bevy::{
+    app::{App, Update},
+    ecs::system::Res,
+    prelude::{
+        in_state, AppExtStates, Commands, IntoSystemConfigs, OnEnter, Query, Resource, States,
+    },
+    state::app::StatesPlugin,
+};
+use bevy_godot4::prelude::{
+    bevy_app, AsPhysicsSystem, ErasedGd, ErasedGdResource, GodotScene, SystemDeltaTimer,
+};
+use godot::{
+    builtin::Vector2,
+    classes::{ResourceLoader, Sprite2D},
+};
+use godot::{init::ExtensionLibrary, prelude::gdextension};
 
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash, States)]
 enum GameState {
@@ -10,10 +25,12 @@ enum GameState {
 
 #[bevy_app]
 fn build_app(app: &mut App) {
-    app.init_state::<GameState>()
+    app.add_plugins(StatesPlugin)
+        .init_state::<GameState>()
         .init_resource::<MyAssets>()
         .add_systems(OnEnter(GameState::Playing), spawn_sprite)
-        .add_systems(Update,
+        .add_systems(
+            Update,
             move_sprite
                 .as_physics_system()
                 .run_if(in_state(GameState::Playing)),
@@ -28,11 +45,7 @@ pub struct MyAssets {
 impl Default for MyAssets {
     fn default() -> Self {
         let mut resource_loader = ResourceLoader::singleton();
-        let sprite = ErasedGdResource::new(
-            resource_loader
-                .load("sprite.tscn".into())
-                .unwrap(),
-        );
+        let sprite = ErasedGdResource::new(resource_loader.load("sprite.tscn".into()).unwrap());
 
         Self { sprite }
     }
