@@ -63,15 +63,6 @@ fn maybe_dec_ref<T: GodotClass>(gd: &mut Gd<T>) -> bool {
     unsafe { <Object as Bounds>::DynMemory::maybe_dec_ref(&mut gd_.raw) }
 }
 
-fn maybe_dec_ref_opt<T: GodotClass>(gd: &mut Option<Gd<T>>) -> bool {
-    if let Some(gd) = gd {
-        let gd_: &mut Gd_<T> = unsafe { std::mem::transmute(gd) };
-        unsafe { <Object as Bounds>::DynMemory::maybe_dec_ref(&mut gd_.raw) }
-    } else {
-        false
-    }
-}
-
 impl ErasedGdResource {
     pub fn get(&mut self) -> Gd<Resource> {
         self.try_get().unwrap()
