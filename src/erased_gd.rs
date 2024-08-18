@@ -1,8 +1,7 @@
-use crate::prelude::*;
+use bevy::prelude::Component;
 use godot::{
-    classes::Resource,
-    obj::RawGd,
-    obj::{bounds::DynMemory, Bounds},
+    classes::{Node, Object, Resource},
+    obj::{bounds::DynMemory, Bounds, Gd, GodotClass, Inherits, InstanceId, RawGd},
     sys,
 };
 
@@ -37,7 +36,7 @@ impl ErasedGd {
     }
 }
 
-#[derive(Debug, Resource)]
+#[derive(Debug, bevy::prelude::Resource)]
 pub struct ErasedGdResource {
     resource_id: InstanceId,
 }
@@ -48,38 +47,26 @@ struct Gd_<T: GodotClass> {
 }
 
 fn maybe_inc_ref<T: GodotClass>(gd: &mut Gd<T>) {
-    let gd_: &mut Gd_<T> = unsafe {
-        std::mem::transmute(gd)
-    };
+    let gd_: &mut Gd_<T> = unsafe { std::mem::transmute(gd) };
     <Object as Bounds>::DynMemory::maybe_inc_ref(&mut gd_.raw);
 }
 
 fn maybe_inc_ref_opt<T: GodotClass>(gd: &mut Option<Gd<T>>) {
     if let Some(gd) = gd {
-        let gd_: &mut Gd_<T> = unsafe {
-            std::mem::transmute(gd)
-        };
+        let gd_: &mut Gd_<T> = unsafe { std::mem::transmute(gd) };
         <Object as Bounds>::DynMemory::maybe_inc_ref(&mut gd_.raw);
     }
 }
 
 fn maybe_dec_ref<T: GodotClass>(gd: &mut Gd<T>) -> bool {
-    let gd_: &mut Gd_<T> = unsafe {
-        std::mem::transmute(gd)
-    };
-    unsafe {
-        <Object as Bounds>::DynMemory::maybe_dec_ref(&mut gd_.raw)
-    }
+    let gd_: &mut Gd_<T> = unsafe { std::mem::transmute(gd) };
+    unsafe { <Object as Bounds>::DynMemory::maybe_dec_ref(&mut gd_.raw) }
 }
 
 fn maybe_dec_ref_opt<T: GodotClass>(gd: &mut Option<Gd<T>>) -> bool {
     if let Some(gd) = gd {
-        let gd_: &mut Gd_<T> = unsafe {
-            std::mem::transmute(gd)
-        };
-        unsafe {
-            <Object as Bounds>::DynMemory::maybe_dec_ref(&mut gd_.raw)
-        }
+        let gd_: &mut Gd_<T> = unsafe { std::mem::transmute(gd) };
+        unsafe { <Object as Bounds>::DynMemory::maybe_dec_ref(&mut gd_.raw) }
     } else {
         false
     }

@@ -1,3 +1,10 @@
+use bevy::app::App;
+use godot::{
+    classes::{INode, Node},
+    obj::Base,
+    prelude::{godot_api, GodotClass},
+};
+
 use crate::prelude::*;
 use std::{
     panic::{catch_unwind, resume_unwind, AssertUnwindSafe},
@@ -71,7 +78,7 @@ impl INode for BevyApp {
                 resume_unwind(e);
             }
 
-            app.world.remove_resource::<GodotVisualFrame>();
+            app.world_mut().remove_resource::<GodotVisualFrame>();
         }
     }
 
@@ -90,7 +97,7 @@ impl INode for BevyApp {
                 resume_unwind(e);
             }
 
-            app.world.remove_resource::<GodotPhysicsFrame>();
+            app.world_mut().remove_resource::<GodotPhysicsFrame>();
         }
     }
 }

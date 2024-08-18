@@ -1,6 +1,8 @@
-use crate::prelude::*;
-use bevy::ecs::system::SystemParam;
-use godot::classes::Engine;
+use bevy::{ecs::system::SystemParam, prelude::NonSendMut};
+use godot::{
+    classes::{Engine, SceneTree},
+    obj::Gd,
+};
 use std::marker::PhantomData;
 
 #[derive(SystemParam)]
