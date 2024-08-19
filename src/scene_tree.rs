@@ -1,6 +1,8 @@
-use crate::prelude::*;
-use bevy::ecs::system::SystemParam;
-use godot::engine::Engine;
+use bevy::{ecs::system::SystemParam, prelude::NonSendMut};
+use godot::{
+    classes::{Engine, SceneTree},
+    obj::Gd,
+};
 use std::marker::PhantomData;
 
 #[derive(SystemParam)]
@@ -12,7 +14,7 @@ pub struct SceneTreeRef<'w, 's> {
 
 impl<'w, 's> SceneTreeRef<'w, 's> {
     pub fn get(&mut self) -> Gd<SceneTree> {
-        self.gd.0.share()
+        self.gd.0.clone()
     }
 }
 

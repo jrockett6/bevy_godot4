@@ -1,3 +1,10 @@
+use bevy::app::App;
+use godot::{
+    classes::{INode, Node},
+    obj::Base,
+    prelude::{godot_api, GodotClass},
+};
+
 use crate::prelude::*;
 use std::{
     panic::{catch_unwind, resume_unwind, AssertUnwindSafe},
@@ -26,38 +33,38 @@ impl BevyApp {
 }
 
 #[godot_api]
-impl NodeVirtual for BevyApp {
+impl INode for BevyApp {
     fn init(_base: Base<Node>) -> Self {
         Default::default()
     }
 
     fn ready(&mut self) {
-        if godot::engine::Engine::singleton().is_editor_hint() {
+        if godot::classes::Engine::singleton().is_editor_hint() {
             return;
         }
 
         let mut app = App::new();
         (APP_BUILDER_FN.lock().unwrap().as_mut().unwrap())(&mut app);
-        app.add_plugin(bevy::core::TaskPoolPlugin::default())
-            .add_plugin(bevy::log::LogPlugin::default())
-            .add_plugin(bevy::core::TypeRegistrationPlugin)
-            .add_plugin(bevy::core::FrameCountPlugin)
-            .add_plugin(bevy::diagnostic::DiagnosticsPlugin)
-            .add_plugin(bevy::time::TimePlugin)
-            .add_plugin(bevy::hierarchy::HierarchyPlugin)
-            .add_plugin(crate::scene::PackedScenePlugin)
+        app.add_plugins(bevy::core::TaskPoolPlugin::default())
+            .add_plugins(bevy::log::LogPlugin::default())
+            .add_plugins(bevy::core::TypeRegistrationPlugin)
+            .add_plugins(bevy::core::FrameCountPlugin)
+            .add_plugins(bevy::diagnostic::DiagnosticsPlugin)
+            .add_plugins(bevy::time::TimePlugin)
+            .add_plugins(bevy::hierarchy::HierarchyPlugin)
+            .add_plugins(crate::scene::PackedScenePlugin)
             .init_non_send_resource::<crate::scene_tree::SceneTreeRefImpl>();
-        // .add_plugin(GodotSignalsPlugin)
-        // .add_plugin(GodotInputEventPlugin);
+        // .add_plugins(GodotSignalsPlugin)
+        // .add_plugins(GodotInputEventPlugin);
 
         #[cfg(feature = "assets")]
-        app.add_plugin(crate::assets::GodotAssetsPlugin);
+        app.add_plugins(crate::assets::GodotAssetsPlugin);
 
         self.app = Some(app);
     }
 
     fn process(&mut self, _delta: f64) {
-        if godot::engine::Engine::singleton().is_editor_hint() {
+        if godot::classes::Engine::singleton().is_editor_hint() {
             return;
         }
 
@@ -71,12 +78,12 @@ impl NodeVirtual for BevyApp {
                 resume_unwind(e);
             }
 
-            app.world.remove_resource::<GodotVisualFrame>();
+            app.world_mut().remove_resource::<GodotVisualFrame>();
         }
     }
 
     fn physics_process(&mut self, _delta: f64) {
-        if godot::engine::Engine::singleton().is_editor_hint() {
+        if godot::classes::Engine::singleton().is_editor_hint() {
             return;
         }
 
@@ -90,7 +97,7 @@ impl NodeVirtual for BevyApp {
                 resume_unwind(e);
             }
 
-            app.world.remove_resource::<GodotPhysicsFrame>();
+            app.world_mut().remove_resource::<GodotPhysicsFrame>();
         }
     }
 }

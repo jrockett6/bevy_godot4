@@ -12,8 +12,8 @@ assets = [] # experimental feature, see assets::GodotResourceLoader
 
 [dependencies]
 anyhow = "1"
-bevy = { version = "0.10", default-features = false, features = ["bevy_asset"] }
-godot = { git = "https://github.com/godot-rust/gdext", rev = "885bb91926c76867093d85208b33aa80c87183b6" }
+bevy = { version = "0.14", default-features = false, features = ["bevy_asset"] }
+godot = "0.1.3"
 bevy_godot4_proc_macros = { path = "./proc_macros" }
 lazy_static = "1.4.0"
 send_wrapper = "0.6"
