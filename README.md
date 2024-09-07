@@ -12,10 +12,11 @@ The architecture in this crate mimics that of [bevy_godot](https://github.com/ra
 
 1. Follow the steps outlined in the [GDExtension Getting Started](https://github.com/godot-rust/gdext#getting-started).
 
-2. Add this line to your cargo dependencies (along with the godot dependency from GDExtension setup):
+2. Add this line to your cargo dependencies (along with the godot dependency from GDExtension setup):  
+❗ Consieder using crates.io version of the [godot](https://crates.io/crates/godot) crate, and not the github one ❗
 ```
 [dependencies]
-godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }
+godot = "0.1.3"
 bevy_godot4 = { git = "https://github.com/jrockett6/bevy_godot4", branch = "main" }
 ```
 3. Create a function that takes a `&mut App` and builds your bevy app, and annotate it with `#[bevy_app]`:
