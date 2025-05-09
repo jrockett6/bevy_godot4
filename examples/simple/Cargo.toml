@@ -12,9 +12,9 @@ name = "simple"
 crate-type = ["cdylib"]
 
 [dependencies]
-bevy = { version = "0.14.1", default-features = false, features = [
+bevy = { version = "0.15.3", default-features = false, features = [
     "bevy_asset",
     "bevy_state",
 ] }
 bevy_godot4 = { path = "../../../bevy_godot4" }
-godot = "0.1.3"
+godot = "0.2.4"
