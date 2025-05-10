@@ -13,12 +13,21 @@ The architecture in this crate is based on [bevy_godot](https://github.com/rand0
 
 1. Follow the steps outlined in the [GDExtension Getting Started](https://godot-rust.github.io/book/intro/index.html).
 
-2. Add this library as a dependency (along with the GDExtension godot crate):  
-```
+2. Add this library as a dependency (along with the GDExtension godot crate):
+```toml
 [dependencies]
+bevy = { version = "0.16", default-features = false, features = [
+    "bevy_asset",
+    "bevy_state",
+] }
 bevy_godot4 = { git = "https://github.com/jrockett6/bevy_godot4", branch = "main" }
-godot = "0.1.3"
+godot = "0.2.4"
 ```
+
+> **_NOTE:_** You can, of course, enable other features in `bevy`; in the above
+> example, we've simply minimized our feature set in order to minimize compile
+> times and built-artifact size.
+
 3. Create a function that takes a `&mut App` and builds your bevy app, and annotate it with `#[bevy_app]`:
 ```rust
 #[bevy_app]
@@ -26,9 +35,18 @@ fn build_app(app: &mut App) {
     app.add_system(my_system)
 }
 ```
-4. Cargo build your project, and make sure the dll is found by Godot via the .gdextension file. You should now have the `BevyApp` Node avaiable to you in the Godot editor (you may need to refresh the project in the editor). 
+
+4. Cargo build your project, and make sure the dll is found by Godot via the .gdextension file. You should now have the `BevyApp` Node avaiable to you in the Godot editor (you may need to refresh the project in the editor).
 
 5. Add this `BevyApp` Node as a Godot autoload named `BevyAppSingleton` in the Godot project settings.
+
+## Version Compatibility Matrix
+
+| Godot-Bevy | Bevy | Godot-Rust | Godot |
+|------------|------|------------|-------|
+| 0.2.x      | 0.15 | 0.2.4      | 4.4.x |
+| 0.3.x      | 0.16 | 0.2.4      | 4.4.x |
+
 
 ## Features
 

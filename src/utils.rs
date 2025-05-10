@@ -1,5 +1,8 @@
 use bevy::{
-    ecs::{schedule::SystemConfigs, system::SystemParam},
+    ecs::{
+        schedule::ScheduleConfigs,
+        system::{ScheduleSystem, SystemParam},
+    },
     prelude::*,
 };
 use std::{
@@ -18,11 +21,11 @@ pub struct GodotPhysicsFrame;
 /// Adds `as_physics_system` that schedules a system only for the physics frame
 pub trait AsPhysicsSystem<Params> {
     #[allow(clippy::wrong_self_convention)]
-    fn as_physics_system(self) -> SystemConfigs;
+    fn as_physics_system(self) -> ScheduleConfigs<ScheduleSystem>;
 }
 
 impl<Params, T: IntoSystem<(), (), Params>> AsPhysicsSystem<Params> for T {
-    fn as_physics_system(self) -> SystemConfigs {
+    fn as_physics_system(self) -> ScheduleConfigs<ScheduleSystem> {
         self.run_if(resource_exists::<GodotPhysicsFrame>)
     }
 }
@@ -30,11 +33,11 @@ impl<Params, T: IntoSystem<(), (), Params>> AsPhysicsSystem<Params> for T {
 /// Adds `as_visual_system` that schedules a system only for the frame
 pub trait AsVisualSystem<Params> {
     #[allow(clippy::wrong_self_convention)]
-    fn as_visual_system(self) -> SystemConfigs;
+    fn as_visual_system(self) -> ScheduleConfigs<ScheduleSystem>;
 }
 
 impl<Params, T: IntoSystem<(), (), Params>> AsVisualSystem<Params> for T {
-    fn as_visual_system(self) -> SystemConfigs {
+    fn as_visual_system(self) -> ScheduleConfigs<ScheduleSystem> {
         self.run_if(resource_exists::<GodotVisualFrame>)
     }
 }
@@ -46,11 +49,10 @@ impl<Params, T: IntoSystem<(), (), Params>> AsVisualSystem<Params> for T {
 #[derive(SystemParam)]
 pub struct SystemDeltaTimer<'w, 's> {
     last_time: Local<'s, Option<Instant>>,
-    #[system_param(ignore)]
     marker: PhantomData<&'w ()>,
 }
 
-impl<'w, 's> SystemDeltaTimer<'w, 's> {
+impl SystemDeltaTimer<'_, '_> {
     /// Returns the time passed since the last invocation
     pub fn delta(&mut self) -> Duration {
         let now = Instant::now();
