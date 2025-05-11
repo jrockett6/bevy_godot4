@@ -1,7 +1,7 @@
 [package]
 name = "bevy_godot4"
-version = "0.2.0"
-edition = "2021"
+version = "0.3.0"
+edition = "2024"
 
 [lib]
 crate-type = ["lib", "cdylib"]
@@ -12,8 +12,8 @@ assets = [] # experimental feature, see assets::GodotResourceLoader
 
 [dependencies]
 anyhow = "1"
-bevy = { version = "0.15", default-features = false, features = ["bevy_asset"] }
+bevy = { version = "0.16", default-features = false, features = ["bevy_asset", "bevy_log"] }
 godot = "0.2.4"
 bevy_godot4_proc_macros = { path = "./proc_macros" }
-lazy_static = "1.4.0"
+lazy_static = "1.5.0"
 send_wrapper = "0.6"

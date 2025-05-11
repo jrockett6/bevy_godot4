@@ -2,12 +2,12 @@ use bevy::app::App;
 use godot::{
     classes::{INode, Node},
     obj::Base,
-    prelude::{godot_api, GodotClass},
+    prelude::{GodotClass, godot_api},
 };
 
 use crate::prelude::*;
 use std::{
-    panic::{catch_unwind, resume_unwind, AssertUnwindSafe},
+    panic::{AssertUnwindSafe, catch_unwind, resume_unwind},
     sync::Mutex,
 };
 
@@ -45,13 +45,11 @@ impl INode for BevyApp {
 
         let mut app = App::new();
         (APP_BUILDER_FN.lock().unwrap().as_mut().unwrap())(&mut app);
-        app.add_plugins(bevy::core::TaskPoolPlugin::default())
+        app.add_plugins(bevy::app::TaskPoolPlugin::default())
             .add_plugins(bevy::log::LogPlugin::default())
-            .add_plugins(bevy::core::TypeRegistrationPlugin)
-            .add_plugins(bevy::core::FrameCountPlugin)
+            .add_plugins(bevy::diagnostic::FrameCountPlugin)
             .add_plugins(bevy::diagnostic::DiagnosticsPlugin)
             .add_plugins(bevy::time::TimePlugin)
-            .add_plugins(bevy::hierarchy::HierarchyPlugin)
             .add_plugins(crate::scene::PackedScenePlugin)
             .init_non_send_resource::<crate::scene_tree::SceneTreeRefImpl>();
         // .add_plugins(GodotSignalsPlugin)
