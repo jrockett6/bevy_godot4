@@ -42,10 +42,10 @@ fn build_app(app: &mut App) {
 
 ## Version Compatibility Matrix
 
-| Godot-Bevy | Bevy | Godot-Rust | Godot |
-|------------|------|------------|-------|
-| 0.2.x      | 0.15 | 0.2.4      | 4.4.x |
-| 0.3.x      | 0.16 | 0.2.4      | 4.4.x |
+| bevy_godot4 | Bevy | Godot-Rust | Godot |
+|-------------|------|------------|-------|
+| 0.2.x       | 0.15 | 0.2.4      | 4.4.x |
+| 0.3.x       | 0.16 | 0.2.4      | 4.4.x |
 
 
 ## Features
@@ -106,11 +106,3 @@ fn my_main_thread_system(
 ```
 
 *Checkout the examples folder for more.*
-
-
-
-
-
-
-
-
