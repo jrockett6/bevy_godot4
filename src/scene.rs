@@ -3,8 +3,8 @@ use std::str::FromStr;
 use crate::prelude::*;
 use bevy::{
     app::{App, Plugin, PostUpdate},
+    log::tracing,
     prelude::{Commands, Component, Entity, Query, Without},
-    utils::tracing,
 };
 use godot::{
     builtin::{GString, Transform2D, Transform3D, Vector2, Vector3},
@@ -134,7 +134,9 @@ fn spawn_scene(
         {
             Some(mut app) => app.add_child(&instance),
             None => {
-                tracing::error!("attempted to add a child to the BevyAppSingleton autoload, but the BevyAppSingleton autoload wasn't found");
+                tracing::error!(
+                    "attempted to add a child to the BevyAppSingleton autoload, but the BevyAppSingleton autoload wasn't found"
+                );
                 return;
             }
         }
@@ -144,13 +146,17 @@ fn spawn_scene(
                 GodotSceneTransform::Transform2D(transform) => {
                     match instance.clone().try_cast::<Node2D>().ok() {
                         Some(mut node2d) => node2d.set_global_transform(*transform),
-                        None => tracing::error!("attempted to spawn a scene with a transform on Node that did not inherit from Node3D, the transform was not set"),
+                        None => tracing::error!(
+                            "attempted to spawn a scene with a transform on Node that did not inherit from Node3D, the transform was not set"
+                        ),
                     }
                 }
                 GodotSceneTransform::Transform3D(transform) => {
                     match instance.clone().try_cast::<Node3D>().ok() {
                         Some(mut node3d) => node3d.set_global_transform(*transform),
-                        None => tracing::error!("attempted to spawn a scene with a transform on Node that did not inherit from Node3D, the transform was not set"),
+                        None => tracing::error!(
+                            "attempted to spawn a scene with a transform on Node that did not inherit from Node3D, the transform was not set"
+                        ),
                     }
                 }
             }

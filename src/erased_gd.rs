@@ -1,7 +1,7 @@
 use bevy::prelude::Component;
 use godot::{
     classes::{Node, Object, Resource},
-    obj::{bounds::DynMemory, Bounds, Gd, GodotClass, Inherits, InstanceId, RawGd},
+    obj::{Bounds, Gd, GodotClass, Inherits, InstanceId, RawGd, bounds::DynMemory},
     sys,
 };
 
@@ -86,7 +86,7 @@ impl Clone for ErasedGdResource {
         maybe_inc_ref_opt::<Resource>(&mut Gd::try_from_instance_id(self.resource_id).ok());
 
         Self {
-            resource_id: self.resource_id.clone(),
+            resource_id: self.resource_id,
         }
     }
 }

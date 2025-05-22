@@ -1,13 +1,11 @@
 use bevy::{
     app::{App, Update},
-    ecs::system::Res,
-    prelude::{
-        in_state, AppExtStates, Commands, IntoSystemConfigs, OnEnter, Query, Resource, States,
-    },
+    ecs::{schedule::IntoScheduleConfigs, system::Res},
+    prelude::{AppExtStates, Commands, OnEnter, Query, Resource, States, in_state},
     state::app::StatesPlugin,
 };
 use bevy_godot4::prelude::{
-    bevy_app, AsPhysicsSystem, ErasedGd, ErasedGdResource, GodotScene, SystemDeltaTimer,
+    AsPhysicsSystem, ErasedGd, ErasedGdResource, GodotScene, SystemDeltaTimer, bevy_app,
 };
 use godot::{
     builtin::Vector2,
@@ -57,7 +55,7 @@ fn spawn_sprite(mut commands: Commands, assets: Res<MyAssets>) {
 }
 
 fn move_sprite(mut sprite: Query<&mut ErasedGd>, mut delta: SystemDeltaTimer) {
-    if let Ok(mut sprite) = sprite.get_single_mut() {
+    if let Ok(mut sprite) = sprite.single_mut() {
         let mut sprite = sprite.get::<Sprite2D>();
         let delta = delta.delta_seconds() * 20.0;
         let position = sprite.get_position();
