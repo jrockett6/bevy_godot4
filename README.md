@@ -38,7 +38,7 @@ fn build_app(app: &mut App) {
 
 4. Cargo build your project, and make sure the dll is found by Godot via the .gdextension file. You should now have the `BevyApp` Node avaiable to you in the Godot editor (you may need to refresh the project in the editor).
 
-5. Add this `BevyApp` Node as a Godot autoload named `BevyAppSingleton` in the Godot project settings.
+5. Add this `BevyApp` Node as the root of a new scene `bevy_app_singleton.tscn`, and add the scene as a Godot autoload named `BevyAppSingleton` in the Godot project settings.
 
 ## Version Compatibility Matrix
 
