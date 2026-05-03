@@ -7,12 +7,12 @@ use bevy::{
 use bevy_godot4::prelude::{
     AsPhysicsSystem, ErasedGd, ErasedGdResource, GodotScene, SystemDeltaTimer, bevy_app,
 };
+use godot::obj::Singleton;
 use godot::{
     builtin::Vector2,
     classes::{ResourceLoader, Sprite2D},
 };
 use godot::{init::ExtensionLibrary, prelude::gdextension};
-use godot::obj::Singleton;
 
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash, States)]
 enum GameState {
@@ -55,15 +55,15 @@ fn spawn_sprite(mut commands: Commands, assets: Res<MyAssets>) {
     );
 }
 
-fn move_sprite(mut sprite: Query<&mut ErasedGd>, mut delta: SystemDeltaTimer) {
-    if let Ok(mut sprite) = sprite.single_mut() {
-        let mut sprite = sprite.get::<Sprite2D>();
-        let delta = delta.delta_seconds() * 20.0;
-        let position = sprite.get_position();
+fn move_sprite(mut nodes: Query<&mut ErasedGd>, mut delta: SystemDeltaTimer) {
+    for mut node in &mut nodes {
+        let delta_secs = delta.delta_seconds() * 20.0;
 
+        let mut sprite = node.get::<Sprite2D>();
+        let position = sprite.get_position();
         sprite.set_position(Vector2 {
-            x: position.x + delta,
-            y: position.y + delta,
+            x: position.x + delta_secs,
+            y: position.y + delta_secs,
         });
     }
 }

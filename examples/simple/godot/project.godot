@@ -8,13 +8,21 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Simple"
 run/main_scene="res://main.tscn"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 BevyAppSingleton="*res://bevy_app_singleton.tscn"
+
+[dotnet]
+
+project/assembly_name="Simple"
